@@ -38,9 +38,16 @@ void XAboutWidget::setData(DATA data)
     g_data=data;
 
     ui->labelInfo->setText(data.sInfo);
+    ui->labelLibraries->setText(data.sLibraries);
+
+    QPixmap pixMap=QPixmap(data.sLogoPath);
+
+    pixMap=pixMap.scaledToHeight(height());
+
+    ui->labelLogo->setPixmap(pixMap);
 }
 
 void XAboutWidget::on_pushButtonCheckUpdates_clicked()
 {
-    // TODO
+    QDesktopServices::openUrl(QUrl(g_data.sUpdatesLink));
 }

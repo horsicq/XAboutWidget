@@ -22,6 +22,8 @@
 #define XABOUTWIDGET_H
 
 #include <QWidget>
+#include <QDesktopServices>
+#include <QUrl>
 
 namespace Ui {
 class XAboutWidget;
@@ -38,6 +40,8 @@ public:
         QString sInfo;
         QString sUpdatesLink;
         QString sLibraries;
+        QString sLogoPath;
+        QString sThanksPath;
     };
 
     explicit XAboutWidget(QWidget *pParent=nullptr);
