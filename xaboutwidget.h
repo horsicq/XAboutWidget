@@ -23,7 +23,11 @@
 
 #include <QWidget>
 #include <QDesktopServices>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QUrl>
+#include <QDir>
+#include <QListWidgetItem>
 
 namespace Ui {
 class XAboutWidget;
@@ -34,6 +38,15 @@ class XAboutWidget : public QWidget
     Q_OBJECT
 
 public:
+
+    struct THANKS_RECORD
+    {
+        QString sName;
+        QString sAvatar;
+        QString sWebsite;
+        QString sGithub;
+        QString sTwitter;
+    };
 
     struct DATA
     {
@@ -51,10 +64,17 @@ public:
 
 private slots:
     void on_pushButtonCheckUpdates_clicked();
+    void on_pushButtonAvatar_clicked();
+    void on_pushButtonWebsite_clicked();
+    void on_pushButtonGithub_clicked();
+    void on_pushButtonTwitter_clicked();
+    THANKS_RECORD getThanksRecord(QString sFileName);
+    void on_listWidgetThanks_currentItemChanged(QListWidgetItem *pCurrent,QListWidgetItem *pPrevious);
 
 private:
     Ui::XAboutWidget *ui;
     DATA g_data;
+    THANKS_RECORD g_trCurrent;
 };
 
 #endif // XABOUTWIDGET_H
