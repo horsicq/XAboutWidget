@@ -28,6 +28,11 @@
 #include <QUrl>
 #include <QDir>
 #include <QListWidgetItem>
+#if QT_VERSION >= QT_VERSION_CHECK(5,10,0)
+#include <QRandomGenerator>
+#elif (QT_VERSION_MAJOR>=6)
+#include <QRandomGenerator>
+#endif
 
 namespace Ui {
 class XAboutWidget;
@@ -62,6 +67,9 @@ public:
 
     void setData(DATA data);
 
+private:
+    void random();
+
 private slots:
     void on_pushButtonCheckUpdates_clicked();
     void on_pushButtonAvatar_clicked();
@@ -74,7 +82,7 @@ private slots:
 private:
     Ui::XAboutWidget *ui;
     DATA g_data;
-    THANKS_RECORD g_trCurrent;
+    THANKS_RECORD g_thanksRecordCurrent;
 };
 
 #endif // XABOUTWIDGET_H

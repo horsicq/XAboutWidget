@@ -74,6 +74,37 @@ void XAboutWidget::setData(DATA data)
         ui->listWidgetThanks->blockSignals(bBlocked1);
     #endif
     }
+
+    random();
+}
+
+void XAboutWidget::random()
+{
+    qint32 nNumberOfFiles=ui->listWidgetThanks->count();
+
+    if(nNumberOfFiles)
+    {
+        quint16 nRandom=0;
+
+    #if QT_VERSION >=QT_VERSION_CHECK(5,10,0)
+        nRandom=(quint16)(QRandomGenerator::global()->generate());
+    #elif (QT_VERSION_MAJOR>=6)
+        nRandom=(quint16)(QRandomGenerator::global()->generate());
+    #else
+        static quint32 nSeed=0;
+
+        if(!nSeed)
+        {
+            quint32 nRValue=QDateTime::currentMSecsSinceEpoch()&0xFFFFFFFF;
+
+            nSeed^=nRValue;
+            qsrand(nSeed);
+        }
+        nRandom=(quint16)qrand();
+    #endif
+
+        ui->listWidgetThanks->setCurrentRow(nRandom%nNumberOfFiles);
+    }
 }
 
 void XAboutWidget::on_pushButtonCheckUpdates_clicked()
@@ -83,22 +114,26 @@ void XAboutWidget::on_pushButtonCheckUpdates_clicked()
 
 void XAboutWidget::on_pushButtonAvatar_clicked()
 {
-    // TODO
+    random();
 }
 
 void XAboutWidget::on_pushButtonWebsite_clicked()
 {
-    // TODO
+    QDesktopServices::openUrl(QUrl(g_thanksRecordCurrent.sWebsite));
 }
 
 void XAboutWidget::on_pushButtonGithub_clicked()
 {
-    // TODO
+    QString sLink=QString("https://github.com/%1").arg(g_thanksRecordCurrent.sGithub);
+
+    QDesktopServices::openUrl(QUrl(sLink));
 }
 
 void XAboutWidget::on_pushButtonTwitter_clicked()
 {
-    // TODO
+    QString sLink=QString("https://twitter.com/%1").arg(g_thanksRecordCurrent.sTwitter);
+
+    QDesktopServices::openUrl(QUrl(sLink));
 }
 
 XAboutWidget::THANKS_RECORD XAboutWidget::getThanksRecord(QString sFileName)
@@ -114,12 +149,20 @@ XAboutWidget::THANKS_RECORD XAboutWidget::getThanksRecord(QString sFileName)
         if(jsDoc.isObject())
         {
             result.sName=jsDoc.object()["data"].toObject()["name"].toString();
+            result.sWebsite=jsDoc.object()["data"].toObject()["website"].toString();
+            result.sTwitter=jsDoc.object()["data"].toObject()["twitter"].toString();
+            result.sGithub=jsDoc.object()["data"].toObject()["github"].toString();
+
             result.sAvatar=jsDoc.object()["data"].toObject()["avatar"].toString();
 
             if(result.sAvatar!="")
             {
                 result.sAvatar=QFileInfo(sFileName).absolutePath()+QDir::separator()+result.sAvatar;
             }
+
+            ui->pushButtonWebsite->setEnabled(result.sWebsite!="");
+            ui->pushButtonGithub->setEnabled(result.sGithub!="");
+            ui->pushButtonTwitter->setEnabled(result.sTwitter!="");
         }
 
         file.close();
@@ -136,9 +179,9 @@ void XAboutWidget::on_listWidgetThanks_currentItemChanged(QListWidgetItem *pCurr
     {
         QString sFilePath=pCurrent->data(Qt::UserRole).toString();
 
-        THANKS_RECORD thanksRecord=getThanksRecord(sFilePath);
+        g_thanksRecordCurrent=getThanksRecord(sFilePath);
 
-        QPixmap pixmap(thanksRecord.sAvatar);
+        QPixmap pixmap(g_thanksRecordCurrent.sAvatar);
         QIcon buttonIcon(pixmap);
         ui->pushButtonAvatar->setIcon(buttonIcon);
         ui->pushButtonAvatar->setIconSize(pixmap.rect().size());
