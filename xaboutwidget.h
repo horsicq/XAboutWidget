@@ -33,6 +33,7 @@
 #elif (QT_VERSION_MAJOR>=6)
 #include <QRandomGenerator>
 #endif
+#include <QDateTime>
 
 namespace Ui {
 class XAboutWidget;
