@@ -73,7 +73,7 @@ private:
 
 private slots:
     void on_pushButtonCheckUpdates_clicked();
-    void on_pushButtonAvatar_clicked();
+    void on_toolButtonAvatar_clicked();
     void on_pushButtonWebsite_clicked();
     void on_pushButtonGithub_clicked();
     void on_pushButtonTwitter_clicked();

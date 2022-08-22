@@ -112,7 +112,7 @@ void XAboutWidget::on_pushButtonCheckUpdates_clicked()
     QDesktopServices::openUrl(QUrl(g_data.sUpdatesLink));
 }
 
-void XAboutWidget::on_pushButtonAvatar_clicked()
+void XAboutWidget::on_toolButtonAvatar_clicked()
 {
     random();
 }
@@ -183,7 +183,7 @@ void XAboutWidget::on_listWidgetThanks_currentItemChanged(QListWidgetItem *pCurr
 
         QPixmap pixmap(g_thanksRecordCurrent.sAvatar);
         QIcon buttonIcon(pixmap);
-        ui->pushButtonAvatar->setIcon(buttonIcon);
-        ui->pushButtonAvatar->setIconSize(pixmap.rect().size());
+        ui->toolButtonAvatar->setIcon(buttonIcon);
+        ui->toolButtonAvatar->setIconSize(pixmap.rect().size());
     }
 }
