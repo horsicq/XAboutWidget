@@ -21,19 +21,19 @@
 #ifndef XABOUTWIDGET_H
 #define XABOUTWIDGET_H
 
-#include <QWidget>
+#include <QDateTime>
 #include <QDesktopServices>
+#include <QDir>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QUrl>
-#include <QDir>
 #include <QListWidgetItem>
+#include <QUrl>
+#include <QWidget>
 #if QT_VERSION >= QT_VERSION_CHECK(5,10,0)
 #include <QRandomGenerator>
 #elif (QT_VERSION_MAJOR>=6)
 #include <QRandomGenerator>
 #endif
-#include <QDateTime>
 
 namespace Ui {
 class XAboutWidget;
