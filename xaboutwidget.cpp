@@ -27,6 +27,8 @@ XAboutWidget::XAboutWidget(QWidget *pParent) :
 {
     ui->setupUi(this);
 
+    ui->labelDate->setText(__DATE__);
+
     ui->tabWidgetAbout->setCurrentIndex(0);
 }
 
