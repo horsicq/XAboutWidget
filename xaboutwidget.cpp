@@ -55,11 +55,8 @@ void XAboutWidget::setData(DATA data)
     qint32 nNumberOfFiles=listFileInfos.count();
 
     {
-    #if QT_VERSION >= 0x050300
-        const QSignalBlocker blocker1(ui->listWidgetThanks);
-    #else
         const bool bBlocked1=ui->listWidgetThanks->blockSignals(true);
-    #endif
+
         for(qint32 i=0;i<nNumberOfFiles;i++)
         {
             QString sFileName=listFileInfos.at(i).absoluteFilePath();
@@ -72,9 +69,8 @@ void XAboutWidget::setData(DATA data)
 
             ui->listWidgetThanks->insertItem(i,pItem);
         }
-    #if QT_VERSION < 0x050300
+
         ui->listWidgetThanks->blockSignals(bBlocked1);
-    #endif
     }
 
     random();
