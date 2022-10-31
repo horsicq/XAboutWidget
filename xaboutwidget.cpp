@@ -27,6 +27,9 @@ XAboutWidget::XAboutWidget(QWidget *pParent) :
 {
     ui->setupUi(this);
 
+    g_data={};
+    g_thanksRecordCurrent={};
+
     ui->labelDate->setText(__DATE__);
 
     ui->tabWidgetAbout->setCurrentIndex(0);
