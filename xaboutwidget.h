@@ -52,6 +52,7 @@ public:
         QString sWebsite;
         QString sGithub;
         QString sTwitter;
+        // TODO mb more
     };
 
     struct DATA
