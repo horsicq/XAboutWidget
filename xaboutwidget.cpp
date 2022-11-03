@@ -172,13 +172,13 @@ XAboutWidget::THANKS_RECORD XAboutWidget::getThanksRecord(QString sFileName)
     return result;
 }
 
-void XAboutWidget::on_listWidgetThanks_currentItemChanged(QListWidgetItem *pCurrent,QListWidgetItem *pPrevious)
+void XAboutWidget::on_listWidgetThanks_currentItemChanged(QListWidgetItem *pItemCurrent,QListWidgetItem *pItemPrevious)
 {
-    Q_UNUSED(pPrevious)
+    Q_UNUSED(pItemPrevious)
 
-    if(pCurrent)
+    if(pItemCurrent)
     {
-        QString sFilePath=pCurrent->data(Qt::UserRole).toString();
+        QString sFilePath=pItemCurrent->data(Qt::UserRole).toString();
 
         g_thanksRecordCurrent=getThanksRecord(sFilePath);
 
