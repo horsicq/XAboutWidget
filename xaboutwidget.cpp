@@ -110,6 +110,7 @@ void XAboutWidget::random()
 
 void XAboutWidget::on_pushButtonCheckUpdates_clicked()
 {
+    // TODO GitHub API
     QDesktopServices::openUrl(QUrl(g_data.sUpdatesLink));
 }
 
