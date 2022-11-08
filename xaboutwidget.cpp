@@ -32,7 +32,7 @@ XAboutWidget::XAboutWidget(QWidget *pParent) :
 
     ui->labelDate->setText(__DATE__);
 
-    ui->tabWidgetAbout->setCurrentIndex(0);
+    ui->tabWidgetAbout->setCurrentIndex(0); // TODO const
 }
 
 XAboutWidget::~XAboutWidget()
