@@ -19,58 +19,53 @@
  * SOFTWARE.
  */
 #include "xaboutwidget.h"
+
 #include "ui_xaboutwidget.h"
 
-XAboutWidget::XAboutWidget(QWidget *pParent) :
-    QWidget(pParent),
-    ui(new Ui::XAboutWidget)
-{
+XAboutWidget::XAboutWidget(QWidget *pParent) : QWidget(pParent), ui(new Ui::XAboutWidget) {
     ui->setupUi(this);
 
-    g_data={};
-    g_thanksRecordCurrent={};
+    g_data = {};
+    g_thanksRecordCurrent = {};
 
     ui->labelDate->setText(__DATE__);
 
-    ui->tabWidgetAbout->setCurrentIndex(0); // TODO const
+    ui->tabWidgetAbout->setCurrentIndex(0);  // TODO const
 }
 
-XAboutWidget::~XAboutWidget()
-{
+XAboutWidget::~XAboutWidget() {
     delete ui;
 }
 
-void XAboutWidget::setData(DATA data)
-{
-    g_data=data;
+void XAboutWidget::setData(DATA data) {
+    g_data = data;
 
     ui->labelInfo->setText(data.sInfo);
     ui->labelLibraries->setText(data.sLibraries);
 
-    QPixmap pixMap=QPixmap(data.sLogoPath);
+    QPixmap pixMap = QPixmap(data.sLogoPath);
 
-    pixMap=pixMap.scaledToHeight(height());
+    pixMap = pixMap.scaledToHeight(height());
 
     ui->labelLogo->setPixmap(pixMap);
 
-    QList<QFileInfo> listFileInfos=QDir(data.sThanksPath).entryInfoList(QStringList()<<"*.json",QDir::Files);
+    QList<QFileInfo> listFileInfos = QDir(data.sThanksPath).entryInfoList(QStringList() << "*.json", QDir::Files);
 
-    qint32 nNumberOfFiles=listFileInfos.count();
+    qint32 nNumberOfFiles = listFileInfos.count();
 
     {
-        const bool bBlocked1=ui->listWidgetThanks->blockSignals(true);
+        const bool bBlocked1 = ui->listWidgetThanks->blockSignals(true);
 
-        for(qint32 i=0;i<nNumberOfFiles;i++)
-        {
-            QString sFileName=listFileInfos.at(i).absoluteFilePath();
+        for (qint32 i = 0; i < nNumberOfFiles; i++) {
+            QString sFileName = listFileInfos.at(i).absoluteFilePath();
 
-            THANKS_RECORD thanksRecord=getThanksRecord(sFileName);
+            THANKS_RECORD thanksRecord = getThanksRecord(sFileName);
 
-            QListWidgetItem *pItem=new QListWidgetItem;
+            QListWidgetItem *pItem = new QListWidgetItem;
             pItem->setText(thanksRecord.sName);
-            pItem->setData(Qt::UserRole,sFileName);
+            pItem->setData(Qt::UserRole, sFileName);
 
-            ui->listWidgetThanks->insertItem(i,pItem);
+            ui->listWidgetThanks->insertItem(i, pItem);
         }
 
         ui->listWidgetThanks->blockSignals(bBlocked1);
@@ -79,92 +74,80 @@ void XAboutWidget::setData(DATA data)
     random();
 }
 
-void XAboutWidget::random()
-{
-    qint32 nNumberOfFiles=ui->listWidgetThanks->count();
+void XAboutWidget::random() {
+    qint32 nNumberOfFiles = ui->listWidgetThanks->count();
 
-    if(nNumberOfFiles)
-    {
-        quint16 nRandom=0;
+    if (nNumberOfFiles) {
+        quint16 nRandom = 0;
 
-    #if QT_VERSION >=QT_VERSION_CHECK(5,10,0)
-        nRandom=(quint16)(QRandomGenerator::global()->generate());
-    #elif (QT_VERSION_MAJOR>=6)
-        nRandom=(quint16)(QRandomGenerator::global()->generate());
-    #else
-        static quint32 nSeed=0;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+        nRandom = (quint16)(QRandomGenerator::global()->generate());
+#elif (QT_VERSION_MAJOR >= 6)
+        nRandom = (quint16)(QRandomGenerator::global()->generate());
+#else
+        static quint32 nSeed = 0;
 
-        if(!nSeed)
-        {
-            quint32 nRValue=QDateTime::currentMSecsSinceEpoch()&0xFFFFFFFF;
+        if (!nSeed) {
+            quint32 nRValue = QDateTime::currentMSecsSinceEpoch() & 0xFFFFFFFF;
 
-            nSeed^=nRValue;
+            nSeed ^= nRValue;
             qsrand(nSeed);
         }
-        nRandom=(quint16)qrand();
-    #endif
+        nRandom = (quint16)qrand();
+#endif
 
-        ui->listWidgetThanks->setCurrentRow(nRandom%nNumberOfFiles);
+        ui->listWidgetThanks->setCurrentRow(nRandom % nNumberOfFiles);
     }
 }
 
-void XAboutWidget::on_pushButtonCheckUpdates_clicked()
-{
+void XAboutWidget::on_pushButtonCheckUpdates_clicked() {
     // TODO GitHub API
     QDesktopServices::openUrl(QUrl(g_data.sUpdatesLink));
 }
 
-void XAboutWidget::on_toolButtonAvatar_clicked()
-{
+void XAboutWidget::on_toolButtonAvatar_clicked() {
     random();
 }
 
-void XAboutWidget::on_pushButtonWebsite_clicked()
-{
+void XAboutWidget::on_pushButtonWebsite_clicked() {
     QDesktopServices::openUrl(QUrl(g_thanksRecordCurrent.sWebsite));
 }
 
-void XAboutWidget::on_pushButtonGithub_clicked()
-{
-    QString sLink=QString("https://github.com/%1").arg(g_thanksRecordCurrent.sGithub);
+void XAboutWidget::on_pushButtonGithub_clicked() {
+    QString sLink = QString("https://github.com/%1").arg(g_thanksRecordCurrent.sGithub);
 
     QDesktopServices::openUrl(QUrl(sLink));
 }
 
-void XAboutWidget::on_pushButtonTwitter_clicked()
-{
-    QString sLink=QString("https://twitter.com/%1").arg(g_thanksRecordCurrent.sTwitter);
+void XAboutWidget::on_pushButtonTwitter_clicked() {
+    QString sLink = QString("https://twitter.com/%1").arg(g_thanksRecordCurrent.sTwitter);
 
     QDesktopServices::openUrl(QUrl(sLink));
 }
 
-XAboutWidget::THANKS_RECORD XAboutWidget::getThanksRecord(QString sFileName)
-{
-    THANKS_RECORD result={};
+XAboutWidget::THANKS_RECORD XAboutWidget::getThanksRecord(QString sFileName) {
+    THANKS_RECORD result = {};
 
     QFile file;
     file.setFileName(sFileName);
-    if(file.open(QIODevice::ReadOnly))
-    {
-        QJsonDocument jsDoc=QJsonDocument::fromJson(QString(file.readAll()).toUtf8());
+    if (file.open(QIODevice::ReadOnly)) {
+        QJsonDocument jsDoc = QJsonDocument::fromJson(QString(file.readAll()).toUtf8());
 
-        if(jsDoc.isObject())
-        {
-            result.sName=jsDoc.object()["data"].toObject()["name"].toString();
-            result.sWebsite=jsDoc.object()["data"].toObject()["website"].toString();
-            result.sTwitter=jsDoc.object()["data"].toObject()["twitter"].toString();
-            result.sGithub=jsDoc.object()["data"].toObject()["github"].toString();
+        if (jsDoc.isObject()) {
+            result.sName = jsDoc.object()["data"].toObject()["name"].toString();
+            result.sWebsite = jsDoc.object()["data"].toObject()["website"].toString();
+            result.sTwitter = jsDoc.object()["data"].toObject()["twitter"].toString();
+            result.sGithub = jsDoc.object()["data"].toObject()["github"].toString();
 
-            result.sAvatar=jsDoc.object()["data"].toObject()["avatar"].toString();
+            result.sAvatar = jsDoc.object()["data"].toObject()["avatar"].toString();
 
-            if(result.sAvatar!="")
-            {
-                result.sAvatar=QFileInfo(sFileName).absolutePath()+QDir::separator()+result.sAvatar;
+            if (result.sAvatar != "") {
+                result.sAvatar = QFileInfo(sFileName).absolutePath() + QDir::separator() + result.sAvatar;
             }
 
-            ui->pushButtonWebsite->setEnabled(result.sWebsite!="");
-            ui->pushButtonGithub->setEnabled(result.sGithub!="");
-            ui->pushButtonTwitter->setEnabled(result.sTwitter!="");
+            ui->pushButtonWebsite->setEnabled(result.sWebsite != "");
+            ui->pushButtonGithub->setEnabled(result.sGithub != "");
+            ui->pushButtonTwitter->setEnabled(result.sTwitter != "");
         }
 
         file.close();
@@ -173,15 +156,13 @@ XAboutWidget::THANKS_RECORD XAboutWidget::getThanksRecord(QString sFileName)
     return result;
 }
 
-void XAboutWidget::on_listWidgetThanks_currentItemChanged(QListWidgetItem *pItemCurrent,QListWidgetItem *pItemPrevious)
-{
+void XAboutWidget::on_listWidgetThanks_currentItemChanged(QListWidgetItem *pItemCurrent, QListWidgetItem *pItemPrevious) {
     Q_UNUSED(pItemPrevious)
 
-    if(pItemCurrent)
-    {
-        QString sFilePath=pItemCurrent->data(Qt::UserRole).toString();
+    if (pItemCurrent) {
+        QString sFilePath = pItemCurrent->data(Qt::UserRole).toString();
 
-        g_thanksRecordCurrent=getThanksRecord(sFilePath);
+        g_thanksRecordCurrent = getThanksRecord(sFilePath);
 
         QPixmap pixmap(g_thanksRecordCurrent.sAvatar);
         QIcon buttonIcon(pixmap);

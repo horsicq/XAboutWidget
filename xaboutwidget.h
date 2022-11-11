@@ -29,9 +29,9 @@
 #include <QListWidgetItem>
 #include <QUrl>
 #include <QWidget>
-#if QT_VERSION >= QT_VERSION_CHECK(5,10,0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
 #include <QRandomGenerator>
-#elif (QT_VERSION_MAJOR>=6)
+#elif (QT_VERSION_MAJOR >= 6)
 #include <QRandomGenerator>
 #endif
 
@@ -39,14 +39,11 @@ namespace Ui {
 class XAboutWidget;
 }
 
-class XAboutWidget : public QWidget
-{
+class XAboutWidget : public QWidget {
     Q_OBJECT
 
 public:
-
-    struct THANKS_RECORD
-    {
+    struct THANKS_RECORD {
         QString sName;
         QString sAvatar;
         QString sWebsite;
@@ -55,8 +52,7 @@ public:
         // TODO mb more
     };
 
-    struct DATA
-    {
+    struct DATA {
         QString sInfo;
         QString sUpdatesLink;
         QString sLibraries;
@@ -64,7 +60,7 @@ public:
         QString sThanksPath;
     };
 
-    explicit XAboutWidget(QWidget *pParent=nullptr);
+    explicit XAboutWidget(QWidget *pParent = nullptr);
     ~XAboutWidget();
 
     void setData(DATA data);
@@ -79,7 +75,7 @@ private slots:
     void on_pushButtonGithub_clicked();
     void on_pushButtonTwitter_clicked();
     THANKS_RECORD getThanksRecord(QString sFileName);
-    void on_listWidgetThanks_currentItemChanged(QListWidgetItem *pItemCurrent,QListWidgetItem *pItemPrevious);
+    void on_listWidgetThanks_currentItemChanged(QListWidgetItem *pItemCurrent, QListWidgetItem *pItemPrevious);
 
 private:
     Ui::XAboutWidget *ui;
@@ -87,4 +83,4 @@ private:
     THANKS_RECORD g_thanksRecordCurrent;
 };
 
-#endif // XABOUTWIDGET_H
+#endif  // XABOUTWIDGET_H
