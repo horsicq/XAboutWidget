@@ -170,3 +170,8 @@ void XAboutWidget::on_listWidgetThanks_currentItemChanged(QListWidgetItem *pItem
         ui->toolButtonAvatar->setIconSize(pixmap.rect().size());
     }
 }
+
+void XAboutWidget::on_labelInfo_linkActivated(const QString &sLink)
+{
+    QDesktopServices::openUrl(sLink);
+}

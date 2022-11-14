@@ -76,6 +76,7 @@ private slots:
     void on_pushButtonTwitter_clicked();
     THANKS_RECORD getThanksRecord(QString sFileName);
     void on_listWidgetThanks_currentItemChanged(QListWidgetItem *pItemCurrent, QListWidgetItem *pItemPrevious);
+    void on_labelInfo_linkActivated(const QString &sLink);
 
 private:
     Ui::XAboutWidget *ui;
