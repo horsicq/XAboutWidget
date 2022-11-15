@@ -22,7 +22,8 @@
 
 #include "ui_xaboutwidget.h"
 
-XAboutWidget::XAboutWidget(QWidget *pParent) : QWidget(pParent), ui(new Ui::XAboutWidget) {
+XAboutWidget::XAboutWidget(QWidget *pParent) : QWidget(pParent), ui(new Ui::XAboutWidget)
+{
     ui->setupUi(this);
 
     g_data = {};
@@ -32,11 +33,13 @@ XAboutWidget::XAboutWidget(QWidget *pParent) : QWidget(pParent), ui(new Ui::XAbo
     ui->tabWidgetAbout->setCurrentIndex(0);  // TODO const
 }
 
-XAboutWidget::~XAboutWidget() {
+XAboutWidget::~XAboutWidget()
+{
     delete ui;
 }
 
-void XAboutWidget::setData(DATA data) {
+void XAboutWidget::setData(DATA data)
+{
     g_data = data;
 
     ui->labelInfo->setText(data.sInfo);
@@ -73,7 +76,8 @@ void XAboutWidget::setData(DATA data) {
     random();
 }
 
-void XAboutWidget::random() {
+void XAboutWidget::random()
+{
     qint32 nNumberOfFiles = ui->listWidgetThanks->count();
 
     if (nNumberOfFiles) {
@@ -99,32 +103,38 @@ void XAboutWidget::random() {
     }
 }
 
-void XAboutWidget::on_pushButtonCheckUpdates_clicked() {
+void XAboutWidget::on_pushButtonCheckUpdates_clicked()
+{
     // TODO GitHub API
     QDesktopServices::openUrl(QUrl(g_data.sUpdatesLink));
 }
 
-void XAboutWidget::on_toolButtonAvatar_clicked() {
+void XAboutWidget::on_toolButtonAvatar_clicked()
+{
     random();
 }
 
-void XAboutWidget::on_pushButtonWebsite_clicked() {
+void XAboutWidget::on_pushButtonWebsite_clicked()
+{
     QDesktopServices::openUrl(QUrl(g_thanksRecordCurrent.sWebsite));
 }
 
-void XAboutWidget::on_pushButtonGithub_clicked() {
+void XAboutWidget::on_pushButtonGithub_clicked()
+{
     QString sLink = QString("https://github.com/%1").arg(g_thanksRecordCurrent.sGithub);
 
     QDesktopServices::openUrl(QUrl(sLink));
 }
 
-void XAboutWidget::on_pushButtonTwitter_clicked() {
+void XAboutWidget::on_pushButtonTwitter_clicked()
+{
     QString sLink = QString("https://twitter.com/%1").arg(g_thanksRecordCurrent.sTwitter);
 
     QDesktopServices::openUrl(QUrl(sLink));
 }
 
-XAboutWidget::THANKS_RECORD XAboutWidget::getThanksRecord(QString sFileName) {
+XAboutWidget::THANKS_RECORD XAboutWidget::getThanksRecord(QString sFileName)
+{
     THANKS_RECORD result = {};
 
     QFile file;
@@ -155,7 +165,8 @@ XAboutWidget::THANKS_RECORD XAboutWidget::getThanksRecord(QString sFileName) {
     return result;
 }
 
-void XAboutWidget::on_listWidgetThanks_currentItemChanged(QListWidgetItem *pItemCurrent, QListWidgetItem *pItemPrevious) {
+void XAboutWidget::on_listWidgetThanks_currentItemChanged(QListWidgetItem *pItemCurrent, QListWidgetItem *pItemPrevious)
+{
     Q_UNUSED(pItemPrevious)
 
     if (pItemCurrent) {
