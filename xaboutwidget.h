@@ -21,16 +21,16 @@
 #ifndef XABOUTWIDGET_H
 #define XABOUTWIDGET_H
 
+#include <QClipboard>
 #include <QDateTime>
 #include <QDesktopServices>
 #include <QDir>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QListWidgetItem>
+#include <QMessageBox>
 #include <QUrl>
 #include <QWidget>
-#include <QMessageBox>
-#include <QClipboard>
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
 #include <QRandomGenerator>
 #elif (QT_VERSION_MAJOR >= 6)
