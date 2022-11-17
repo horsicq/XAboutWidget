@@ -29,6 +29,8 @@
 #include <QListWidgetItem>
 #include <QUrl>
 #include <QWidget>
+#include <QMessageBox>
+#include <QClipboard>
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
 #include <QRandomGenerator>
 #elif (QT_VERSION_MAJOR >= 6)

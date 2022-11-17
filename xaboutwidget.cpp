@@ -183,7 +183,11 @@ void XAboutWidget::on_listWidgetThanks_currentItemChanged(QListWidgetItem *pItem
 
 void XAboutWidget::on_labelInfo_linkActivated(const QString &sLink)
 {
-    QDesktopServices::openUrl(sLink);
+    if (sLink.startsWith("http",Qt::CaseInsensitive)) {
+        QDesktopServices::openUrl(sLink);
+    } else {
+        QApplication::clipboard()->setText(sLink);
 
-    // TODO BTC link
+        QMessageBox::information(this,tr("Information"),tr("The value copied to clipboard"));
+    }
 }
