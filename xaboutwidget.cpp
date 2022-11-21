@@ -22,8 +22,7 @@
 
 #include "ui_xaboutwidget.h"
 
-XAboutWidget::XAboutWidget(QWidget *pParent)
-    : QWidget(pParent), ui(new Ui::XAboutWidget)
+XAboutWidget::XAboutWidget(QWidget *pParent) : QWidget(pParent), ui(new Ui::XAboutWidget)
 {
     ui->setupUi(this);
 
