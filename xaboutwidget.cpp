@@ -133,6 +133,33 @@ void XAboutWidget::on_pushButtonTwitter_clicked()
     QDesktopServices::openUrl(QUrl(sLink));
 }
 
+void XAboutWidget::on_listWidgetThanks_currentItemChanged(QListWidgetItem *pItemCurrent, QListWidgetItem *pItemPrevious)
+{
+    Q_UNUSED(pItemPrevious)
+
+    if (pItemCurrent) {
+        QString sFilePath = pItemCurrent->data(Qt::UserRole).toString();
+
+        g_thanksRecordCurrent = getThanksRecord(sFilePath);
+
+        QPixmap pixmap(g_thanksRecordCurrent.sAvatar);
+        QIcon buttonIcon(pixmap);
+        ui->toolButtonAvatar->setIcon(buttonIcon);
+        ui->toolButtonAvatar->setIconSize(pixmap.rect().size());
+    }
+}
+
+void XAboutWidget::on_labelInfo_linkActivated(const QString &sLink)
+{
+    if (sLink.startsWith("http", Qt::CaseInsensitive)) {
+        QDesktopServices::openUrl(sLink);
+    } else {
+        QApplication::clipboard()->setText(sLink);
+
+        QMessageBox::information(this, tr("Information"), tr("The value copied to clipboard"));
+    }
+}
+
 XAboutWidget::THANKS_RECORD XAboutWidget::getThanksRecord(QString sFileName)
 {
     THANKS_RECORD result = {};
@@ -163,31 +190,4 @@ XAboutWidget::THANKS_RECORD XAboutWidget::getThanksRecord(QString sFileName)
     }
 
     return result;
-}
-
-void XAboutWidget::on_listWidgetThanks_currentItemChanged(QListWidgetItem *pItemCurrent, QListWidgetItem *pItemPrevious)
-{
-    Q_UNUSED(pItemPrevious)
-
-    if (pItemCurrent) {
-        QString sFilePath = pItemCurrent->data(Qt::UserRole).toString();
-
-        g_thanksRecordCurrent = getThanksRecord(sFilePath);
-
-        QPixmap pixmap(g_thanksRecordCurrent.sAvatar);
-        QIcon buttonIcon(pixmap);
-        ui->toolButtonAvatar->setIcon(buttonIcon);
-        ui->toolButtonAvatar->setIconSize(pixmap.rect().size());
-    }
-}
-
-void XAboutWidget::on_labelInfo_linkActivated(const QString &sLink)
-{
-    if (sLink.startsWith("http", Qt::CaseInsensitive)) {
-        QDesktopServices::openUrl(sLink);
-    } else {
-        QApplication::clipboard()->setText(sLink);
-
-        QMessageBox::information(this, tr("Information"), tr("The value copied to clipboard"));
-    }
 }
