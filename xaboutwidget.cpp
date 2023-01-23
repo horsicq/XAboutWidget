@@ -174,7 +174,6 @@ XAboutWidget::THANKS_RECORD XAboutWidget::getThanksRecord(QString sFileName)
             result.sWebsite = jsDoc.object()["data"].toObject()["website"].toString();
             result.sTwitter = jsDoc.object()["data"].toObject()["twitter"].toString();
             result.sGithub = jsDoc.object()["data"].toObject()["github"].toString();
-
             result.sAvatar = jsDoc.object()["data"].toObject()["avatar"].toString();
 
             if (result.sAvatar != "") {
