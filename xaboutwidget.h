@@ -36,6 +36,10 @@
 #elif (QT_VERSION_MAJOR >= 6)
 #include <QRandomGenerator>
 #endif
+#ifdef QT_NETWORK_LIB
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#endif
 
 namespace Ui {
 class XAboutWidget;
@@ -57,6 +61,7 @@ public:
     struct DATA {
         QString sInfo;
         QString sUpdatesLink;
+        QString sServerVersionLink;
         QString sLibraries;
         QString sLogoPath;
         QString sThanksPath;

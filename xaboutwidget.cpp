@@ -106,7 +106,39 @@ void XAboutWidget::random()
 void XAboutWidget::on_pushButtonCheckUpdates_clicked()
 {
     // TODO GitHub API
+#ifdef QT_NETWORK_LIB
+    if (g_data.sServerVersionLink != "") {
+        QNetworkAccessManager manager(this);
+        QNetworkRequest request(QUrl(g_data.sServerVersionLink));
+        QNetworkReply *pReply = manager.get(request);
+        QEventLoop loop;
+        QObject::connect(pReply, SIGNAL(finished()), &loop, SLOT(quit()));
+        loop.exec();
+
+        if (pReply->error() == QNetworkReply::NoError) {
+            if (pReply->bytesAvailable()) {
+                QByteArray baData = pReply->readAll();
+                QString sVersion = QString(baData.data());
+
+                if (QCoreApplication::applicationVersion().toDouble() < sVersion.toDouble()) {
+                    if (QMessageBox::information(this, tr("Update information"),
+                                                 QString("%1\r\n\r\n%2\r\n\r\n%3").arg(tr("New version available"), sVersion, tr("Go to download page?")),
+                                                 QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes) {
+                        QDesktopServices::openUrl(QUrl(g_data.sUpdatesLink));
+                    }
+                } else {
+                    QMessageBox::information(this, tr("Update information"), tr("No update available"));
+                }
+            }
+        } else {
+            QMessageBox::critical(this, tr("Network error"), pReply->errorString());
+        }
+    } else {
+        QDesktopServices::openUrl(QUrl(g_data.sUpdatesLink));
+    }
+#else
     QDesktopServices::openUrl(QUrl(g_data.sUpdatesLink));
+#endif
 }
 
 void XAboutWidget::on_toolButtonAvatar_clicked()
