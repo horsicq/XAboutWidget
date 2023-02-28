@@ -105,7 +105,7 @@ void XAboutWidget::random()
 
 void XAboutWidget::on_pushButtonCheckUpdates_clicked()
 {
-    // TODO GitHub API
+    // TODO GitHub API for checking version
 #ifdef QT_NETWORK_LIB
     if (g_data.sServerVersionLink != "") {
         QNetworkAccessManager manager(this);
