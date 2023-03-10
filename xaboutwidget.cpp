@@ -73,10 +73,10 @@ void XAboutWidget::setData(DATA data)
         ui->listWidgetThanks->blockSignals(bBlocked1);
     }
 
-    random();
+    randomImage();
 }
 
-void XAboutWidget::random()
+void XAboutWidget::randomImage()
 {
     qint32 nNumberOfFiles = ui->listWidgetThanks->count();
 
@@ -143,7 +143,7 @@ void XAboutWidget::on_pushButtonCheckUpdates_clicked()
 
 void XAboutWidget::on_toolButtonAvatar_clicked()
 {
-    random();
+    randomImage();
 }
 
 void XAboutWidget::on_pushButtonWebsite_clicked()

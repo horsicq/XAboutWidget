@@ -74,7 +74,7 @@ public:
     void setData(DATA data);
 
 private:
-    void random();
+    void randomImage();
 
 private slots:
     void on_pushButtonCheckUpdates_clicked();
