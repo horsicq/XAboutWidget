@@ -192,7 +192,7 @@ void XAboutWidget::on_labelInfo_linkActivated(const QString &sLink)
     }
 }
 
-XAboutWidget::THANKS_RECORD XAboutWidget::getThanksRecord(QString sFileName)
+XAboutWidget::THANKS_RECORD XAboutWidget::getThanksRecord(const QString &sFileName)
 {
     THANKS_RECORD result = {};
 
