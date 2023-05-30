@@ -85,6 +85,8 @@ private slots:
     void on_listWidgetThanks_currentItemChanged(QListWidgetItem *pItemCurrent, QListWidgetItem *pItemPrevious);
     void on_labelInfo_linkActivated(const QString &sLink);
     THANKS_RECORD getThanksRecord(const QString &sFileName);
+    void on_pushButtonFollowGithub_clicked();
+    void on_pushButtonFollowTwitter_clicked();
 
 private:
     Ui::XAboutWidget *ui;

@@ -222,3 +222,14 @@ XAboutWidget::THANKS_RECORD XAboutWidget::getThanksRecord(const QString &sFileNa
 
     return result;
 }
+
+void XAboutWidget::on_pushButtonFollowGithub_clicked()
+{
+    QDesktopServices::openUrl(QUrl(QString("https://github.com/horsicq")));
+}
+
+void XAboutWidget::on_pushButtonFollowTwitter_clicked()
+{
+    QDesktopServices::openUrl(QUrl(QString("https://twitter.com/horsicq")));
+}
+
