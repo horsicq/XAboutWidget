@@ -232,4 +232,3 @@ void XAboutWidget::on_pushButtonFollowTwitter_clicked()
 {
     QDesktopServices::openUrl(QUrl(QString("https://twitter.com/horsicq")));
 }
-
