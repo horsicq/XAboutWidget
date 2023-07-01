@@ -87,7 +87,7 @@ private slots:
     THANKS_RECORD getThanksRecord(const QString &sFileName);
     void on_pushButtonFollowGithub_clicked();
     void on_pushButtonFollowTwitter_clicked();
-    // TODO Follow youtube
+    void on_pushButtonFollowYoutube_clicked();
 
 private:
     Ui::XAboutWidget *ui;
