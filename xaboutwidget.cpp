@@ -237,4 +237,3 @@ void XAboutWidget::on_pushButtonFollowYoutube_clicked()
 {
     QDesktopServices::openUrl(QUrl(QString("https://youtube.com/horsicq")));
 }
-
