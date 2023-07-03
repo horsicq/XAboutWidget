@@ -235,5 +235,5 @@ void XAboutWidget::on_pushButtonFollowTwitter_clicked()
 
 void XAboutWidget::on_pushButtonFollowYoutube_clicked()
 {
-    QDesktopServices::openUrl(QUrl(QString("https://youtube.com/horsicq")));
+    QDesktopServices::openUrl(QUrl(QString("https://www.youtube.com/@funreverseengineering")));
 }
