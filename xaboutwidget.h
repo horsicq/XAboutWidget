@@ -40,7 +40,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #endif
-// TODO XGitHub API
+// TODO XGitHub API for check versions
 
 namespace Ui {
 class XAboutWidget;
