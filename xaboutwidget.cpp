@@ -198,6 +198,7 @@ XAboutWidget::THANKS_RECORD XAboutWidget::getThanksRecord(const QString &sFileNa
 
     QFile file;
     file.setFileName(sFileName);
+
     if (file.open(QIODevice::ReadOnly)) {
         QJsonDocument jsDoc = QJsonDocument::fromJson(QString(file.readAll()).toUtf8());
 
