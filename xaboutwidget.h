@@ -41,6 +41,7 @@
 #include <QNetworkReply>
 #endif
 // TODO XGitHub API for check versions
+// TODO link to a web page with tnaks
 
 namespace Ui {
 class XAboutWidget;
