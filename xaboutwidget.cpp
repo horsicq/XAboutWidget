@@ -27,7 +27,6 @@ XAboutWidget::XAboutWidget(QWidget *pParent) : QWidget(pParent), ui(new Ui::XAbo
     ui->setupUi(this);
 
     g_data = {};
-    g_thanksRecordCurrent = {};
 
     ui->labelDate->setText(__DATE__);
     ui->tabWidgetAbout->setCurrentIndex(0);  // TODO const
@@ -38,9 +37,15 @@ XAboutWidget::~XAboutWidget()
     delete ui;
 }
 
-void XAboutWidget::setData(DATA data)
+void XAboutWidget::setData(const DATA &data)
 {
     g_data = data;
+
+    if (data.sThanksPath != "") {
+#ifdef QT_DEBUG
+        qDebug("Check Thanks Path");
+#endif
+    }
 
     ui->labelInfo->setText(data.sInfo);
     ui->labelLibraries->setText(data.sLibraries);
@@ -50,57 +55,6 @@ void XAboutWidget::setData(DATA data)
     pixMap = pixMap.scaledToHeight(height());
 
     ui->labelLogo->setPixmap(pixMap);
-
-    QList<QFileInfo> listFileInfos = QDir(data.sThanksPath).entryInfoList(QStringList() << "*.json", QDir::Files);
-
-    qint32 nNumberOfFiles = listFileInfos.count();
-
-    {
-        const bool bBlocked1 = ui->listWidgetThanks->blockSignals(true);
-
-        for (qint32 i = 0; i < nNumberOfFiles; i++) {
-            QString sFileName = listFileInfos.at(i).absoluteFilePath();
-
-            THANKS_RECORD thanksRecord = getThanksRecord(sFileName);
-
-            QListWidgetItem *pItem = new QListWidgetItem;
-            pItem->setText(thanksRecord.sName);
-            pItem->setData(Qt::UserRole, sFileName);
-
-            ui->listWidgetThanks->insertItem(i, pItem);
-        }
-
-        ui->listWidgetThanks->blockSignals(bBlocked1);
-    }
-
-    randomImage();
-}
-
-void XAboutWidget::randomImage()
-{
-    qint32 nNumberOfFiles = ui->listWidgetThanks->count();
-
-    if (nNumberOfFiles) {
-        quint16 nRandom = 0;
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
-        nRandom = (quint16)(QRandomGenerator::global()->generate());
-#elif (QT_VERSION_MAJOR >= 6)
-        nRandom = (quint16)(QRandomGenerator::global()->generate());
-#else
-        static quint32 nSeed = 0;
-
-        if (!nSeed) {
-            quint32 nRValue = QDateTime::currentMSecsSinceEpoch() & 0xFFFFFFFF;
-
-            nSeed ^= nRValue;
-            qsrand(nSeed);
-        }
-        nRandom = (quint16)qrand();
-#endif
-
-        ui->listWidgetThanks->setCurrentRow(nRandom % nNumberOfFiles);
-    }
 }
 
 void XAboutWidget::on_pushButtonCheckUpdates_clicked()
@@ -141,46 +95,6 @@ void XAboutWidget::on_pushButtonCheckUpdates_clicked()
 #endif
 }
 
-void XAboutWidget::on_toolButtonAvatar_clicked()
-{
-    randomImage();
-}
-
-void XAboutWidget::on_pushButtonWebsite_clicked()
-{
-    QDesktopServices::openUrl(QUrl(g_thanksRecordCurrent.sWebsite));
-}
-
-void XAboutWidget::on_pushButtonGithub_clicked()
-{
-    QString sLink = QString("https://github.com/%1").arg(g_thanksRecordCurrent.sGithub);
-
-    QDesktopServices::openUrl(QUrl(sLink));
-}
-
-void XAboutWidget::on_pushButtonTwitter_clicked()
-{
-    QString sLink = QString("https://twitter.com/%1").arg(g_thanksRecordCurrent.sTwitter);
-
-    QDesktopServices::openUrl(QUrl(sLink));
-}
-
-void XAboutWidget::on_listWidgetThanks_currentItemChanged(QListWidgetItem *pItemCurrent, QListWidgetItem *pItemPrevious)
-{
-    Q_UNUSED(pItemPrevious)
-
-    if (pItemCurrent) {
-        QString sFilePath = pItemCurrent->data(Qt::UserRole).toString();
-
-        g_thanksRecordCurrent = getThanksRecord(sFilePath);
-
-        QPixmap pixmap(g_thanksRecordCurrent.sAvatar);
-        QIcon buttonIcon(pixmap);
-        ui->toolButtonAvatar->setIcon(buttonIcon);
-        ui->toolButtonAvatar->setIconSize(pixmap.rect().size());
-    }
-}
-
 void XAboutWidget::on_labelInfo_linkActivated(const QString &sLink)
 {
     if (sLink.startsWith("http", Qt::CaseInsensitive)) {
@@ -190,38 +104,6 @@ void XAboutWidget::on_labelInfo_linkActivated(const QString &sLink)
 
         QMessageBox::information(this, tr("Information"), tr("The value copied to clipboard"));
     }
-}
-
-XAboutWidget::THANKS_RECORD XAboutWidget::getThanksRecord(const QString &sFileName)
-{
-    THANKS_RECORD result = {};
-
-    QFile file;
-    file.setFileName(sFileName);
-
-    if (file.open(QIODevice::ReadOnly)) {
-        QJsonDocument jsDoc = QJsonDocument::fromJson(QString(file.readAll()).toUtf8());
-
-        if (jsDoc.isObject()) {
-            result.sName = jsDoc.object()["data"].toObject()["name"].toString();
-            result.sWebsite = jsDoc.object()["data"].toObject()["website"].toString();
-            result.sTwitter = jsDoc.object()["data"].toObject()["twitter"].toString();
-            result.sGithub = jsDoc.object()["data"].toObject()["github"].toString();
-            result.sAvatar = jsDoc.object()["data"].toObject()["avatar"].toString();
-
-            if (result.sAvatar != "") {
-                result.sAvatar = QFileInfo(sFileName).absolutePath() + QDir::separator() + result.sAvatar;
-            }
-
-            ui->pushButtonWebsite->setEnabled(result.sWebsite != "");
-            ui->pushButtonGithub->setEnabled(result.sGithub != "");
-            ui->pushButtonTwitter->setEnabled(result.sTwitter != "");
-        }
-
-        file.close();
-    }
-
-    return result;
 }
 
 void XAboutWidget::on_pushButtonFollowGithub_clicked()
@@ -238,3 +120,9 @@ void XAboutWidget::on_pushButtonFollowYoutube_clicked()
 {
     QDesktopServices::openUrl(QUrl(QString("https://www.youtube.com/@funreverseengineering")));
 }
+
+void XAboutWidget::on_pushButtonThanks_clicked()
+{
+    QDesktopServices::openUrl(QUrl(g_data.sThanksLink));
+}
+

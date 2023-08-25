@@ -41,7 +41,6 @@
 #include <QNetworkReply>
 #endif
 // TODO XGitHub API for check versions
-// TODO link to a web page with tnaks
 
 namespace Ui {
 class XAboutWidget;
@@ -51,49 +50,32 @@ class XAboutWidget : public QWidget {
     Q_OBJECT
 
 public:
-    struct THANKS_RECORD {
-        QString sName;
-        QString sAvatar;
-        QString sWebsite;
-        QString sGithub;
-        QString sTwitter;
-        // TODO mb more
-    };
-
     struct DATA {
         QString sInfo;
         QString sUpdatesLink;
         QString sServerVersionLink;
         QString sLibraries;
         QString sLogoPath;
-        QString sThanksPath;
+        QString sThanksLink;
+        QString sThanksPath; // TODO remove !!!
     };
 
     explicit XAboutWidget(QWidget *pParent = nullptr);
     ~XAboutWidget();
 
-    void setData(DATA data);
-
-private:
-    void randomImage();
+    void setData(const DATA &data);
 
 private slots:
     void on_pushButtonCheckUpdates_clicked();
-    void on_toolButtonAvatar_clicked();
-    void on_pushButtonWebsite_clicked();
-    void on_pushButtonGithub_clicked();
-    void on_pushButtonTwitter_clicked();
-    void on_listWidgetThanks_currentItemChanged(QListWidgetItem *pItemCurrent, QListWidgetItem *pItemPrevious);
     void on_labelInfo_linkActivated(const QString &sLink);
-    THANKS_RECORD getThanksRecord(const QString &sFileName);
     void on_pushButtonFollowGithub_clicked();
     void on_pushButtonFollowTwitter_clicked();
     void on_pushButtonFollowYoutube_clicked();
+    void on_pushButtonThanks_clicked();
 
 private:
     Ui::XAboutWidget *ui;
     DATA g_data;
-    THANKS_RECORD g_thanksRecordCurrent;
 };
 
 #endif  // XABOUTWIDGET_H
