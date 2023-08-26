@@ -125,4 +125,3 @@ void XAboutWidget::on_pushButtonThanks_clicked()
 {
     QDesktopServices::openUrl(QUrl(g_data.sThanksLink));
 }
-
