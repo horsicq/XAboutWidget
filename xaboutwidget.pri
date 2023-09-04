@@ -2,13 +2,13 @@ INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
 
 SOURCES += \
-        $$PWD/xaboutwidget.cpp
+    $$PWD/xaboutwidget.cpp
 
 HEADERS += \
-        $$PWD/xaboutwidget.h
+    $$PWD/xaboutwidget.h
 
 FORMS += \
-        $$PWD/xaboutwidget.ui
+    $$PWD/xaboutwidget.ui
 
 DISTFILES += \
     $$PWD/LICENSE \
