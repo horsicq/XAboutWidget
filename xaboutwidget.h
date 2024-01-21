@@ -25,8 +25,10 @@
 #include <QDateTime>
 #include <QDesktopServices>
 #include <QDir>
+#if (QT_VERSION_MAJOR > 4)
 #include <QJsonDocument>
 #include <QJsonObject>
+#endif
 #include <QListWidgetItem>
 #include <QMessageBox>
 #include <QUrl>
