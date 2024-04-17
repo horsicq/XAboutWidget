@@ -29,7 +29,7 @@ XAboutWidget::XAboutWidget(QWidget *pParent) : QWidget(pParent), ui(new Ui::XAbo
     g_data = {};
 
     ui->labelDate->setText(__DATE__);
-    ui->tabWidgetAbout->setCurrentIndex(0);  // TODO const
+    ui->tabWidgetAbout->setCurrentIndex(0);
 }
 
 XAboutWidget::~XAboutWidget()
