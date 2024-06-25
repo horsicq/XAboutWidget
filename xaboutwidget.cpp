@@ -22,7 +22,7 @@
 
 #include "ui_xaboutwidget.h"
 
-XAboutWidget::XAboutWidget(QWidget *pParent) : QWidget(pParent), ui(new Ui::XAboutWidget)
+XAboutWidget::XAboutWidget(QWidget *pParent) : XShortcutsWidget(pParent), ui(new Ui::XAboutWidget)
 {
     ui->setupUi(this);
 
@@ -35,6 +35,11 @@ XAboutWidget::XAboutWidget(QWidget *pParent) : QWidget(pParent), ui(new Ui::XAbo
 XAboutWidget::~XAboutWidget()
 {
     delete ui;
+}
+
+void XAboutWidget::adjustView()
+{
+
 }
 
 void XAboutWidget::setData(const DATA &data)
@@ -124,4 +129,9 @@ void XAboutWidget::on_pushButtonFollowYoutube_clicked()
 void XAboutWidget::on_pushButtonThanks_clicked()
 {
     QDesktopServices::openUrl(QUrl(g_data.sThanksLink));
+}
+
+void XAboutWidget::registerShortcuts(bool bState)
+{
+    Q_UNUSED(bState)
 }

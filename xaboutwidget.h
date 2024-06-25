@@ -32,7 +32,7 @@
 #include <QListWidgetItem>
 #include <QMessageBox>
 #include <QUrl>
-#include <QWidget>
+#include "xshortcutswidget.h"
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
 #include <QRandomGenerator>
 #elif (QT_VERSION_MAJOR >= 6)
@@ -48,7 +48,7 @@ namespace Ui {
 class XAboutWidget;
 }
 
-class XAboutWidget : public QWidget {
+class XAboutWidget : public XShortcutsWidget {
     Q_OBJECT
 
 public:
@@ -64,6 +64,7 @@ public:
 
     explicit XAboutWidget(QWidget *pParent = nullptr);
     ~XAboutWidget();
+    virtual void adjustView();
 
     void setData(const DATA &data);
 
@@ -74,6 +75,9 @@ private slots:
     void on_pushButtonFollowTwitter_clicked();
     void on_pushButtonFollowYoutube_clicked();
     void on_pushButtonThanks_clicked();
+
+protected:
+    virtual void registerShortcuts(bool bState);
 
 private:
     Ui::XAboutWidget *ui;
