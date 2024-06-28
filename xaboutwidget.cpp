@@ -39,7 +39,6 @@ XAboutWidget::~XAboutWidget()
 
 void XAboutWidget::adjustView()
 {
-
 }
 
 void XAboutWidget::setData(const DATA &data)
