@@ -85,7 +85,7 @@
           <item>
            <widget class="QPushButton" name="pushButtonFollowGithub">
             <property name="text">
-             <string notr="true">Github</string>
+             <string notr="true">GitHub</string>
             </property>
            </widget>
           </item>
@@ -99,7 +99,7 @@
           <item>
            <widget class="QPushButton" name="pushButtonFollowYoutube">
             <property name="text">
-             <string notr="true">Youtube</string>
+             <string notr="true">YouTube</string>
             </property>
            </widget>
           </item>
