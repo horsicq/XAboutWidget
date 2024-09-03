@@ -59,7 +59,6 @@ public:
         QString sLibraries;
         QString sLogoPath;
         QString sThanksLink;
-        QString sThanksPath;  // TODO check all projects and remove !!!
     };
 
     explicit XAboutWidget(QWidget *pParent = nullptr);
