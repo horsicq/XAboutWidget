@@ -45,12 +45,6 @@ void XAboutWidget::setData(const DATA &data)
 {
     g_data = data;
 
-    if (data.sThanksPath != "") {
-#ifdef QT_DEBUG
-        qDebug("Check Thanks Path");
-#endif
-    }
-
     ui->labelInfo->setText(data.sInfo);
     ui->labelLibraries->setText(data.sLibraries);
 
