@@ -41,6 +41,11 @@ void XAboutWidget::adjustView()
 {
 }
 
+void XAboutWidget::reloadData(bool bSaveSelection)
+{
+    Q_UNUSED(bSaveSelection)
+}
+
 void XAboutWidget::setData(const DATA &data)
 {
     g_data = data;

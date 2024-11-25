@@ -64,6 +64,7 @@ public:
     explicit XAboutWidget(QWidget *pParent = nullptr);
     ~XAboutWidget();
     virtual void adjustView();
+    virtual void reloadData(bool bSaveSelection);
 
     void setData(const DATA &data);
 
