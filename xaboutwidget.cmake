@@ -1,8 +1,12 @@
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 
-include(${CMAKE_CURRENT_LIST_DIR}/../XShortcuts/xshortcuts.cmake)
+if (NOT DEFINED XSHORTCUTS_SOURCES)
+    include(${CMAKE_CURRENT_LIST_DIR}/../XShortcuts/xshortcuts.cmake)
+    set(XABOUTWIDGET_SOURCES ${XABOUTWIDGET_SOURCES} ${XSHORTCUTS_SOURCES})
+endif()
 
 set(XABOUTWIDGET_SOURCES
+    ${XABOUTWIDGET_SOURCES}
     ${XSHORTCUTS_SOURCES}
     ${CMAKE_CURRENT_LIST_DIR}/xaboutwidget.cpp
     ${CMAKE_CURRENT_LIST_DIR}/xaboutwidget.h
