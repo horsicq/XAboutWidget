@@ -15,6 +15,8 @@ FORMS += \
     include($$PWD/../XShortcuts/xshortcuts.pri)
 }
 
+
+
 DISTFILES += \
     $$PWD/LICENSE \
     $$PWD/README.md \
