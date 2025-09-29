@@ -81,7 +81,7 @@ protected:
 
 private:
     Ui::XAboutWidget *ui;
-    DATA g_data;
+    DATA m_data;
 };
 
 #endif  // XABOUTWIDGET_H
