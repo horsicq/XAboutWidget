@@ -94,7 +94,7 @@ void XAboutWidget::on_pushButtonCheckUpdates_clicked()
         QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
     }
 #else
-    QDesktopServices::openUrl(QUrl(g_data.sUpdatesLink));
+    QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
 #endif
 }
 
