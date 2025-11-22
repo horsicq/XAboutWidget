@@ -29,7 +29,7 @@ XAboutWidget::XAboutWidget(QWidget *pParent) : XShortcutsWidget(pParent), ui(new
 {
     ui->setupUi(this);
 
-    g_data = {};
+    m_data = {};
 
     ui->labelDate->setText(__DATE__);
     ui->tabWidgetAbout->setCurrentIndex(0);
@@ -51,7 +51,7 @@ void XAboutWidget::reloadData(bool bSaveSelection)
 
 void XAboutWidget::setData(const DATA &data)
 {
-    g_data = data;
+    m_data = data;
 
     ui->labelInfo->setText(data.sInfo);
     ui->labelLibraries->setText(data.sLibraries);
@@ -98,6 +98,31 @@ void XAboutWidget::on_pushButtonCheckUpdates_clicked()
 
             if (!sLatestStableVersion.isEmpty() && !sLatestBetaVersion.isEmpty())
                 break;
+    if (m_data.sServerVersionLink != "") {
+        QNetworkAccessManager manager(this);
+        QNetworkRequest request(QUrl(m_data.sServerVersionLink));
+        QNetworkReply *pReply = manager.get(request);
+        QEventLoop loop;
+        QObject::connect(pReply, SIGNAL(finished()), &loop, SLOT(quit()));
+        loop.exec();
+
+        if (pReply->error() == QNetworkReply::NoError) {
+            if (pReply->bytesAvailable()) {
+                QByteArray baData = pReply->readAll();
+                QString sVersion = QString(baData.data());
+
+                if (QCoreApplication::applicationVersion().toDouble() < sVersion.toDouble()) {
+                    if (QMessageBox::information(this, tr("Update information"),
+                                                 QString("%1\r\n\r\n%2\r\n\r\n%3").arg(tr("New version available"), sVersion, tr("Go to download page?")),
+                                                 QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes) {
+                        QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
+                    }
+                } else {
+                    QMessageBox::information(this, tr("Update information"), tr("No update available"));
+                }
+            }
+        } else {
+            QMessageBox::critical(this, tr("Network error"), pReply->errorString());
         }
 
         if (sLatestStableVersion.isEmpty() && sLatestBetaVersion.isEmpty()) {
@@ -112,11 +137,13 @@ void XAboutWidget::on_pushButtonCheckUpdates_clicked()
 
     } else {
         QMessageBox::critical(this, tr("Network Error"), pReply->errorString());
+        QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
     }
 
     pReply->deleteLater();
 #else
     QDesktopServices::openUrl(QUrl("https://github.com/horsicq/DIE-engine/releases"));
+    QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
 #endif
 }
 
@@ -151,7 +178,7 @@ void XAboutWidget::on_pushButtonFollowYoutube_clicked()
 
 void XAboutWidget::on_pushButtonThanks_clicked()
 {
-    QDesktopServices::openUrl(QUrl(g_data.sThanksLink));
+    QDesktopServices::openUrl(QUrl(m_data.sThanksLink));
 }
 
 void XAboutWidget::registerShortcuts(bool bState)
