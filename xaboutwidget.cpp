@@ -109,17 +109,17 @@ void XAboutWidget::on_labelInfo_linkActivated(const QString &sLink)
     }
 }
 
-void XAboutWidget::on_pushButtonFollowGithub_clicked()
+void XAboutWidget::on_pushButtonFollowGitHub_clicked()
 {
     QDesktopServices::openUrl(QUrl(QString("https://github.com/horsicq")));
 }
 
-void XAboutWidget::on_pushButtonFollowTwitter_clicked()
+void XAboutWidget::on_pushButtonFollowX_clicked()
 {
-    QDesktopServices::openUrl(QUrl(QString("https://twitter.com/horsicq")));
+    QDesktopServices::openUrl(QUrl(QString("https://x.com/horsicq")));
 }
 
-void XAboutWidget::on_pushButtonFollowYoutube_clicked()
+void XAboutWidget::on_pushButtonFollowYouTube_clicked()
 {
     QDesktopServices::openUrl(QUrl(QString("https://www.youtube.com/@funreverseengineering")));
 }
