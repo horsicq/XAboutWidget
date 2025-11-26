@@ -129,6 +129,12 @@ void XAboutWidget::on_pushButtonThanks_clicked()
     QDesktopServices::openUrl(QUrl(m_data.sThanksLink));
 }
 
+void XAboutWidget::on_pushButtonTelegram_clicked()
+{
+    QDesktopServices::openUrl(QUrl(QString("https://www.t.me/horsicq")));
+}
+
+
 void XAboutWidget::registerShortcuts(bool bState)
 {
     Q_UNUSED(bState)
