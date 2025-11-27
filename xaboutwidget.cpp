@@ -134,6 +134,12 @@ void XAboutWidget::on_pushButtonTelegram_clicked()
     QDesktopServices::openUrl(QUrl(QString("https://www.t.me/horsicq")));
 }
 
+void XAboutWidget::on_pushButtonDiscord_clicked()
+{
+    // Currently only possible over the Website to open the Discord profile. Not Desktop-App compatible!
+    // User have to signed into Discord on the Website!
+    QDesktopServices::openUrl(QUrl(QString("https://discord.com/users/641741884095725569")));
+}
 
 void XAboutWidget::registerShortcuts(bool bState)
 {

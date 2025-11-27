@@ -76,6 +76,7 @@ private slots:
     void on_pushButtonFollowYouTube_clicked();
     void on_pushButtonThanks_clicked();
     void on_pushButtonTelegram_clicked();
+    void on_pushButtonDiscord_clicked();
 
 protected:
     virtual void registerShortcuts(bool bState);

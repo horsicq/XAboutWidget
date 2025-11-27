@@ -235,6 +235,13 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QPushButton" name="pushButtonDiscord">
+            <property name="text">
+             <string notr="true">Discord</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
