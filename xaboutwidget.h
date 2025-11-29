@@ -71,10 +71,12 @@ public:
 private slots:
     void on_pushButtonCheckUpdates_clicked();
     void on_labelInfo_linkActivated(const QString &sLink);
-    void on_pushButtonFollowGithub_clicked();
-    void on_pushButtonFollowTwitter_clicked();
-    void on_pushButtonFollowYoutube_clicked();
+    void on_pushButtonFollowGitHub_clicked();
+    void on_pushButtonFollowX_clicked();
+    void on_pushButtonFollowYouTube_clicked();
     void on_pushButtonThanks_clicked();
+    void on_pushButtonTelegram_clicked();
+    void on_pushButtonDiscord_clicked();
 
 protected:
     virtual void registerShortcuts(bool bState);

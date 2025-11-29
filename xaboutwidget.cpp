@@ -161,17 +161,17 @@ void XAboutWidget::on_labelInfo_linkActivated(const QString &sLink)
     }
 }
 
-void XAboutWidget::on_pushButtonFollowGithub_clicked()
+void XAboutWidget::on_pushButtonFollowGitHub_clicked()
 {
     QDesktopServices::openUrl(QUrl(QString("https://github.com/horsicq")));
 }
 
-void XAboutWidget::on_pushButtonFollowTwitter_clicked()
+void XAboutWidget::on_pushButtonFollowX_clicked()
 {
-    QDesktopServices::openUrl(QUrl(QString("https://twitter.com/horsicq")));
+    QDesktopServices::openUrl(QUrl(QString("https://x.com/horsicq")));
 }
 
-void XAboutWidget::on_pushButtonFollowYoutube_clicked()
+void XAboutWidget::on_pushButtonFollowYouTube_clicked()
 {
     QDesktopServices::openUrl(QUrl(QString("https://www.youtube.com/@funreverseengineering")));
 }
@@ -179,6 +179,18 @@ void XAboutWidget::on_pushButtonFollowYoutube_clicked()
 void XAboutWidget::on_pushButtonThanks_clicked()
 {
     QDesktopServices::openUrl(QUrl(m_data.sThanksLink));
+}
+
+void XAboutWidget::on_pushButtonTelegram_clicked()
+{
+    QDesktopServices::openUrl(QUrl(QString("https://www.t.me/horsicq")));
+}
+
+void XAboutWidget::on_pushButtonDiscord_clicked()
+{
+    // Currently only possible over the Website to open the Discord profile. Not Desktop-App compatible!
+    // User have to signed into Discord on the Website!
+    QDesktopServices::openUrl(QUrl(QString("https://discord.com/users/641741884095725569")));
 }
 
 void XAboutWidget::registerShortcuts(bool bState)
