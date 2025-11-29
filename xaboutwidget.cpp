@@ -23,7 +23,7 @@
 #include "qjsonarray.h"
 #include "qradiobutton.h"
 #include "ui_xaboutwidget.h"
-#include "../XUpdate/xupdate.h"
+#include "xupdate.h"
 
 XAboutWidget::XAboutWidget(QWidget *pParent) : XShortcutsWidget(pParent), ui(new Ui::XAboutWidget)
 {
@@ -66,6 +66,7 @@ void XAboutWidget::setData(const DATA &data)
 void XAboutWidget::on_pushButtonCheckUpdates_clicked()
 {
 #ifdef QT_NETWORK_LIB
+    // Try GitHub API method first (for DIE-engine repo)
     QString apiUrl = "https://api.github.com/repos/horsicq/DIE-engine/releases";
 
     QNetworkAccessManager manager(this);
@@ -98,51 +99,71 @@ void XAboutWidget::on_pushButtonCheckUpdates_clicked()
 
             if (!sLatestStableVersion.isEmpty() && !sLatestBetaVersion.isEmpty())
                 break;
-    if (m_data.sServerVersionLink != "") {
-        QNetworkAccessManager manager(this);
-        QNetworkRequest request(QUrl(m_data.sServerVersionLink));
-        QNetworkReply *pReply = manager.get(request);
-        QEventLoop loop;
-        QObject::connect(pReply, SIGNAL(finished()), &loop, SLOT(quit()));
-        loop.exec();
-
-        if (pReply->error() == QNetworkReply::NoError) {
-            if (pReply->bytesAvailable()) {
-                QByteArray baData = pReply->readAll();
-                QString sVersion = QString(baData.data());
-
-                if (QCoreApplication::applicationVersion().toDouble() < sVersion.toDouble()) {
-                    if (QMessageBox::information(this, tr("Update information"),
-                                                 QString("%1\r\n\r\n%2\r\n\r\n%3").arg(tr("New version available"), sVersion, tr("Go to download page?")),
-                                                 QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes) {
-                        QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
-                    }
-                } else {
-                    QMessageBox::information(this, tr("Update information"), tr("No update available"));
-                }
-            }
-        } else {
-            QMessageBox::critical(this, tr("Network error"), pReply->errorString());
         }
 
         if (sLatestStableVersion.isEmpty() && sLatestBetaVersion.isEmpty()) {
             QMessageBox::information(this, tr("Update Info"), tr("No updates found."));
+            pReply->deleteLater();
             return;
         }
 
 #ifdef Q_OS_WIN
         XUpdate *updater = new XUpdate(this);
         updater->showVersionSelectionDialog(sLatestStableVersion, sLatestBetaVersion);
+#else
+        // For non-Windows, just show the versions found
+        QString message = tr("Updates available:");
+        if (!sLatestStableVersion.isEmpty())
+            message += "\n" + tr("Stable: ") + sLatestStableVersion;
+        if (!sLatestBetaVersion.isEmpty())
+            message += "\n" + tr("Beta: ") + sLatestBetaVersion;
+
+        if (QMessageBox::information(this, tr("Update Info"), message + "\n\n" + tr("Go to download page?"),
+                                     QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes) {
+            QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
+        }
 #endif
 
+        pReply->deleteLater();
     } else {
-        QMessageBox::critical(this, tr("Network Error"), pReply->errorString());
-        QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
-    }
+        // GitHub API failed, try fallback method if available
+        pReply->deleteLater();
 
-    pReply->deleteLater();
+        if (m_data.sServerVersionLink != "") {
+            QNetworkAccessManager manager2(this);
+            QNetworkRequest request2(QUrl(m_data.sServerVersionLink));
+            QNetworkReply *pReply2 = manager2.get(request2);
+            QEventLoop loop2;
+            QObject::connect(pReply2, SIGNAL(finished()), &loop2, SLOT(quit()));
+            loop2.exec();
+
+            if (pReply2->error() == QNetworkReply::NoError) {
+                if (pReply2->bytesAvailable()) {
+                    QByteArray baData = pReply2->readAll();
+                    QString sVersion = QString(baData.data());
+
+                    if (QCoreApplication::applicationVersion().toDouble() < sVersion.toDouble()) {
+                        if (QMessageBox::information(this, tr("Update information"),
+                                                     QString("%1\r\n\r\n%2\r\n\r\n%3").arg(tr("New version available"), sVersion, tr("Go to download page?")),
+                                                     QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes) {
+                            QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
+                        }
+                    } else {
+                        QMessageBox::information(this, tr("Update information"), tr("No update available"));
+                    }
+                }
+            } else {
+                QMessageBox::critical(this, tr("Network error"), pReply2->errorString());
+            }
+
+            pReply2->deleteLater();
+        } else {
+            // Both methods failed, just open the updates link
+            QMessageBox::critical(this, tr("Network Error"), pReply->errorString());
+            QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
+        }
+    }
 #else
-    QDesktopServices::openUrl(QUrl("https://github.com/horsicq/DIE-engine/releases"));
     QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
 #endif
 }
