@@ -20,7 +20,10 @@
  */
 #include "xaboutwidget.h"
 
+#include "qjsonarray.h"
+#include "qradiobutton.h"
 #include "ui_xaboutwidget.h"
+#include "xupdate.h"
 
 XAboutWidget::XAboutWidget(QWidget *pParent) : XShortcutsWidget(pParent), ui(new Ui::XAboutWidget)
 {
@@ -62,41 +65,111 @@ void XAboutWidget::setData(const DATA &data)
 
 void XAboutWidget::on_pushButtonCheckUpdates_clicked()
 {
-    // TODO GitHub API for checking version
 #ifdef QT_NETWORK_LIB
-    if (m_data.sServerVersionLink != "") {
-        QNetworkAccessManager manager(this);
-        QNetworkRequest request(QUrl(m_data.sServerVersionLink));
-        QNetworkReply *pReply = manager.get(request);
-        QEventLoop loop;
-        QObject::connect(pReply, SIGNAL(finished()), &loop, SLOT(quit()));
-        loop.exec();
+    // Try GitHub API method first (for DIE-engine repo)
+    QString apiUrl = "https://api.github.com/repos/horsicq/DIE-engine/releases";
 
-        if (pReply->error() == QNetworkReply::NoError) {
-            if (pReply->bytesAvailable()) {
-                QByteArray baData = pReply->readAll();
-                QString sVersion = QString(baData.data());
+    QNetworkAccessManager manager(this);
+    QNetworkRequest request((QUrl(apiUrl)));
+    QNetworkReply *pReply = manager.get(request);
 
-                if (QCoreApplication::applicationVersion().toDouble() < sVersion.toDouble()) {
-                    if (QMessageBox::information(this, tr("Update information"),
-                                                 QString("%1\r\n\r\n%2\r\n\r\n%3").arg(tr("New version available"), sVersion, tr("Go to download page?")),
-                                                 QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes) {
-                        QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
-                    }
-                } else {
-                    QMessageBox::information(this, tr("Update information"), tr("No update available"));
-                }
-            }
-        } else {
-            QMessageBox::critical(this, tr("Network error"), pReply->errorString());
+    QEventLoop loop;
+    QObject::connect(pReply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+    loop.exec();
+
+    if (pReply->error() == QNetworkReply::NoError) {
+        QByteArray baData = pReply->readAll();
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(baData);
+        QJsonArray releasesArray = jsonDoc.array();
+
+        QString sLatestStableVersion;
+        QString sLatestBetaVersion;
+
+        for (const QJsonValue &val : releasesArray) {
+            QJsonObject releaseObj = val.toObject();
+
+            QString tagName = releaseObj["tag_name"].toString();
+            bool isPrerelease = releaseObj["prerelease"].toBool();
+
+            if (!isPrerelease && sLatestStableVersion.isEmpty())
+                sLatestStableVersion = tagName;
+
+            if (isPrerelease && sLatestBetaVersion.isEmpty())
+                sLatestBetaVersion = tagName;
+
+            if (!sLatestStableVersion.isEmpty() && !sLatestBetaVersion.isEmpty())
+                break;
         }
+
+        if (sLatestStableVersion.isEmpty() && sLatestBetaVersion.isEmpty()) {
+            QMessageBox::information(this, tr("Update Info"), tr("No updates found."));
+            pReply->deleteLater();
+            return;
+        }
+
+#ifdef Q_OS_WIN
+        XUpdate *updater = new XUpdate(this);
+        updater->showVersionSelectionDialog(sLatestStableVersion, sLatestBetaVersion);
+#else
+        // For non-Windows, just show the versions found
+        QString message = tr("Updates available:");
+        if (!sLatestStableVersion.isEmpty())
+            message += "\n" + tr("Stable: ") + sLatestStableVersion;
+        if (!sLatestBetaVersion.isEmpty())
+            message += "\n" + tr("Beta: ") + sLatestBetaVersion;
+
+        if (QMessageBox::information(this, tr("Update Info"), message + "\n\n" + tr("Go to download page?"),
+                                     QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes) {
+            QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
+        }
+#endif
+
+        pReply->deleteLater();
     } else {
-        QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
+        // GitHub API failed, try fallback method if available
+        pReply->deleteLater();
+
+        if (m_data.sServerVersionLink != "") {
+            QNetworkAccessManager manager2(this);
+            QNetworkRequest request2(QUrl(m_data.sServerVersionLink));
+            QNetworkReply *pReply2 = manager2.get(request2);
+            QEventLoop loop2;
+            QObject::connect(pReply2, SIGNAL(finished()), &loop2, SLOT(quit()));
+            loop2.exec();
+
+            if (pReply2->error() == QNetworkReply::NoError) {
+                if (pReply2->bytesAvailable()) {
+                    QByteArray baData = pReply2->readAll();
+                    QString sVersion = QString(baData.data());
+
+                    if (QCoreApplication::applicationVersion().toDouble() < sVersion.toDouble()) {
+                        if (QMessageBox::information(this, tr("Update information"),
+                                                     QString("%1\r\n\r\n%2\r\n\r\n%3").arg(tr("New version available"), sVersion, tr("Go to download page?")),
+                                                     QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes) {
+                            QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
+                        }
+                    } else {
+                        QMessageBox::information(this, tr("Update information"), tr("No update available"));
+                    }
+                }
+            } else {
+                QMessageBox::critical(this, tr("Network error"), pReply2->errorString());
+            }
+
+            pReply2->deleteLater();
+        } else {
+            // Both methods failed, just open the updates link
+            QMessageBox::critical(this, tr("Network Error"), pReply->errorString());
+            QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
+        }
     }
 #else
     QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
 #endif
 }
+
+
+
 
 void XAboutWidget::on_labelInfo_linkActivated(const QString &sLink)
 {
