@@ -15,12 +15,6 @@ FORMS += \
     include($$PWD/../XShortcuts/xshortcuts.pri)
 }
 
-!contains(XCONFIG, xupdate) {
-    XCONFIG += xupdate
-    include($$PWD/../XUpdate/xupdate.pri)
-}
-
-
 DISTFILES += \
     $$PWD/LICENSE \
     $$PWD/README.md \
