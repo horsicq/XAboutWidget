@@ -26,7 +26,7 @@ XAboutWidget::XAboutWidget(QWidget *pParent) : XShortcutsWidget(pParent), ui(new
 {
     ui->setupUi(this);
     ui->pushButtonCheckUpdates->setVisible(!XOptions::isNative());
-    
+
     m_data = {};
 
     ui->labelDate->setText(__DATE__);
@@ -146,4 +146,3 @@ void XAboutWidget::registerShortcuts(bool bState)
 {
     Q_UNUSED(bState)
 }
-
