@@ -38,10 +38,6 @@
 #elif (QT_VERSION_MAJOR >= 6)
 #include <QRandomGenerator>
 #endif
-#ifdef QT_NETWORK_LIB
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#endif
 // TODO XGitHub API for check versions
 
 namespace Ui {

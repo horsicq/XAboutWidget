@@ -22,6 +22,13 @@
 
 #include "ui_xaboutwidget.h"
 
+#ifdef QT_NETWORK_LIB
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QSslError>
+#endif
+
 XAboutWidget::XAboutWidget(QWidget *pParent) : XShortcutsWidget(pParent), ui(new Ui::XAboutWidget)
 {
     ui->setupUi(this);
@@ -68,9 +75,17 @@ void XAboutWidget::on_pushButtonCheckUpdates_clicked()
     if (m_data.sServerVersionLink != "") {
         QNetworkAccessManager manager(this);
         QNetworkRequest request(QUrl(m_data.sServerVersionLink));
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
+        request.setTransferTimeout(15000);
+#endif
         QNetworkReply *pReply = manager.get(request);
         QEventLoop loop;
         QObject::connect(pReply, SIGNAL(finished()), &loop, SLOT(quit()));
+        QObject::connect(&manager, &QNetworkAccessManager::sslErrors, this, [&loop](QNetworkReply *pReply, const QList<QSslError> &listErrors) {
+            Q_UNUSED(listErrors)
+            pReply->abort();
+            loop.quit();
+        });
         loop.exec();
 
         if (pReply->error() == QNetworkReply::NoError) {
@@ -80,7 +95,7 @@ void XAboutWidget::on_pushButtonCheckUpdates_clicked()
 
                 if (QCoreApplication::applicationVersion().toDouble() < sVersion.toDouble()) {
                     if (QMessageBox::information(this, tr("Update information"),
-                                                 QString("%1\r\n\r\n%2\r\n\r\n%3").arg(tr("New version available"), sVersion, tr("Go to download page?")),
+                                                 QString("%1\r\n\r\n%2\r\n\r\n%3").arg(tr("New version available")).arg(sVersion).arg(tr("Go to download page?")),
                                                  QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes) {
                         QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
                     }
@@ -91,6 +106,8 @@ void XAboutWidget::on_pushButtonCheckUpdates_clicked()
         } else {
             QMessageBox::critical(this, tr("Network error"), pReply->errorString());
         }
+
+        pReply->deleteLater();
     } else {
         QDesktopServices::openUrl(QUrl(m_data.sUpdatesLink));
     }
