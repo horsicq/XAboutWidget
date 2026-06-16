@@ -31,8 +31,6 @@
 #include "xshortcutswidget.h"
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
 #include <QRandomGenerator>
-#elif (QT_VERSION_MAJOR >= 6)
-#include <QRandomGenerator>
 #endif
 // TODO XGitHub API for check versions
 
