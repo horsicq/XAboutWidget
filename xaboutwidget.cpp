@@ -36,7 +36,7 @@ XAboutWidget::XAboutWidget(QWidget *pParent) : XShortcutsWidget(pParent), ui(new
 
     m_data = {};
 
-    ui->labelDate->setText(__DATE__);
+    ui->labelDate->setText(QString("%1 %2").arg(__DATE__, __TIME__));
     ui->tabWidgetAbout->setCurrentIndex(0);
 }
 
